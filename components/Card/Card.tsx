@@ -10,7 +10,6 @@ export const Card = ({ post }: CardProps) => {
   const router = useRouter()
   const truncatedDescription = post.description.slice(0, 40) + '...'
 
-  console.log(truncatedDescription)
   return (
     <div className="flex justify-center ">
       <div className="h-fit w-full max-w-[350px]  shadow-lg">

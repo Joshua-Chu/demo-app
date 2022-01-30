@@ -12,7 +12,6 @@ const Login = () => {
 
   const onLogin = async (e: React.SyntheticEvent) => {
     e.preventDefault()
-    console.log({ username, password })
 
     const res = await fetch('/api/author/login', {
       method: 'POST',

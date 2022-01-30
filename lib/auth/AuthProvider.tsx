@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { User } from '../../types'
 
 export type authContextType = {
@@ -36,8 +36,18 @@ export function AuthProvider({ children }: Props) {
     imageUrl: '',
   })
 
+  useEffect(() => {
+    const isAuth = Boolean(localStorage.getItem('isAuth'))
+    const userCache = localStorage.getItem('user')
+    if (isAuth && userCache) {
+      setUser(JSON.parse(userCache) as User)
+    }
+  }, [])
+
   const setRegUser = ({ id, username, imageUrl }: User) => {
     setUser({ id, username, imageUrl })
+    localStorage.setItem('isAuth', 'true')
+    localStorage.setItem('user', JSON.stringify({ id, username, imageUrl }))
   }
 
   const login = () => {
@@ -46,6 +56,8 @@ export function AuthProvider({ children }: Props) {
 
   const logout = () => {
     setUser({ id: '', username: '', imageUrl: '' })
+    localStorage.removeItem('isAuth')
+    localStorage.removeItem('user')
   }
 
   const value = {

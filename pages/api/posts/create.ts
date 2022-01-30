@@ -38,7 +38,6 @@ export default async function createPost(
       }
     `
     const data = await client.request(mutation, params)
-    console.log('data', data)
 
     const publishPost = gql`
       mutation PublishPost($id: ID!) {
