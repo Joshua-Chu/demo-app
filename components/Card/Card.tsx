@@ -1,6 +1,16 @@
 import Image from 'next/image'
+import { useRouter } from 'next/router'
+import { Post } from '../../types'
 
-export const Card = ({ post }) => {
+type CardProps = {
+  post: Post
+}
+
+export const Card = ({ post }: CardProps) => {
+  const router = useRouter()
+  const truncatedDescription = post.description.slice(0, 40) + '...'
+
+  console.log(truncatedDescription)
   return (
     <div className="flex justify-center ">
       <div className="h-fit w-full max-w-[350px]  shadow-lg">
@@ -12,12 +22,16 @@ export const Card = ({ post }) => {
           <h3 className="text-xl font-bold text-blue-600">{post.title}</h3>
           <p className="font-bold">Created by: @{post.author.username}</p>
           <p className="break-words">
-            {post.description.length > 80
-              ? post.description.slice(80) + '...'
+            {post.description.length >= 80
+              ? truncatedDescription
               : post.description}
           </p>
-          <div></div>
-          <button className="self-end rounded-lg bg-blue-600">Read more</button>
+          <button
+            className="self-end rounded-lg bg-blue-600"
+            onClick={() => router.push(`/post/${post.slug}`)}
+          >
+            Read more
+          </button>
         </div>
       </div>
     </div>

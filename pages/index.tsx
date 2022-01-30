@@ -70,9 +70,6 @@ const data = {
 
 const Home = () => {
   const { user, login, logout } = useAuth()
-  //   console.log('authors', authors.authors)
-  //   console.log('authors', authors)
-  console.log(user)
   return (
     <main className="bg-neutral-900">
       <div className="container mx-auto flex flex-col pt-[88px]">

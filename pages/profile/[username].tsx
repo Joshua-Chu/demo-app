@@ -1,10 +1,12 @@
 import { GetServerSideProps } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useEffect } from 'react'
 import { Card } from '../../components/Card'
 import { Posts } from '../../components/Posts'
 import { useAuth } from '../../lib/auth/AuthProvider'
 import { getPostsOfUser } from '../../lib/graphcms'
+import { Post } from '../../types'
 
 // const data = {
 //   posts: [
@@ -77,7 +79,12 @@ const authorData = {
     username: 'j',
   },
 }
-const ProfilePage = ({ data }) => {
+
+type ProfilePageProps = {
+  data: { posts: Post[] }
+}
+
+const ProfilePage = ({ data }: ProfilePageProps) => {
   const { user } = useAuth()
 
   return (

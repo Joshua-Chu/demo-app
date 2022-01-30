@@ -1,6 +1,10 @@
+import { GetServerSideProps } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useMemo } from 'react'
 import * as timeago from 'timeago.js'
+import { getPostBySlug } from '../../lib/graphcms'
+import { Post } from '../../types'
 
 const postData = {
   author: {
@@ -25,43 +29,63 @@ const postData = {
   createdAt: '2022-01-30T00:19:15.046645+00:00',
 }
 
-const PostDetail = () => {
+type PostDetailProps = {
+  data: { post: Post }
+}
+
+const PostDetail = ({ data }: PostDetailProps) => {
+  const { post } = data
   const timeCreated = useMemo(() => {
-    return timeago.format(postData.createdAt)
-  }, [postData.createdAt])
+    return timeago.format(post.createdAt)
+  }, [post.createdAt])
   return (
     <main className="h-screen pt-[88px]">
       <div className="flex h-full flex-col md:flex-row">
         <div className="flex  basis-3/6 items-center justify-center bg-black px-4 md:basis-3/5">
           <div className="relative h-96 w-96 lg:h-[450px] lg:w-[450px]">
-            <Image src={postData.imageUrl} layout="fill" />
+            <Image src={post.imageUrl} layout="fill" />
           </div>
         </div>
         <div className="flex  basis-3/6 flex-col overflow-y-scroll bg-neutral-900 px-4 py-8 text-gray-400 sm:px-8 md:basis-2/5 md:px-12">
-          <div className="mb-6 flex items-center ">
-            <div className="relative h-14 w-14">
-              <Image
-                src={postData.author.imageUrl}
-                layout="fill"
-                className="rounded-full"
-              />
-            </div>
-            <div className="flex flex-col  pl-2 text-left">
-              <h2>@{postData.author.username}</h2>
+          <div className="mb-6 flex max-w-fit cursor-pointer items-center ">
+            {post.author.imageUrl && (
+              <div className="relative h-14 w-14">
+                <Image
+                  src={post.author.imageUrl}
+                  layout="fill"
+                  className="rounded-full"
+                />
+              </div>
+            )}
+            <div className="flex flex-col  pl-4 text-left">
+              <h2 className="text-blue-600">@{post.author.username}</h2>
               <p>{timeCreated}</p>
             </div>
           </div>
           <h1 className="mb-8 border-b-2 border-blue-600 pb-4 text-white">
-            {postData.title}
+            {post.title}
           </h1>
           <div>
-            <h3 className="text-lg font-bold text-blue-600">Description</h3>
-            <p className=" leading-6 ">{postData.description}</p>
+            <h3 className="mb-2 text-lg font-bold text-blue-600">
+              Description
+            </h3>
+            <p className=" leading-6 ">{post.description}</p>
           </div>
         </div>
       </div>
     </main>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const slug = params && params.slug
+  const data = await getPostBySlug(slug as string)
+
+  return {
+    props: {
+      data,
+    },
+  }
 }
 
 export default PostDetail
