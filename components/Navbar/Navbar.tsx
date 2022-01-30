@@ -24,8 +24,8 @@ export const Navbar = () => {
               <a
                 type="button"
                 onClick={() => {
-                  logout()
                   router.push('/login')
+                  logout()
                 }}
                 className="link-btn"
               >

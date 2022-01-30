@@ -1,6 +1,10 @@
+import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { useAuth } from '../lib/auth/AuthProvider'
 
 const Create = () => {
+  const { user } = useAuth()
+  const router = useRouter()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [postImage, setPostImage] = useState<string | ArrayBuffer | null>('')
@@ -42,22 +46,22 @@ const Create = () => {
         title,
         description,
         imageUrl: data.secure_url,
-        username: 'j',
-        slug: title.toLowerCase().replaceAll(' ', '-'),
+        username: user.username,
+        slug: `${user.username}/${title.toLowerCase().replaceAll(' ', '-')}`,
       }),
       headers: {
         'Content-Type': 'application/json',
       },
     })
 
-    console.log(res)
-
     setTitle('')
     setDescription('')
     setPostImage('')
+
+    router.push(`/profile/${user.username}`)
   }
   return (
-    <div className="mt-[88px]  py-8">
+    <div className="mt-[88px] py-8">
       <div className="container mx-auto  md:mx-auto md:max-w-lg">
         <h1 className="my-4 text-center text-blue-600">Create Post</h1>
 
@@ -88,7 +92,7 @@ const Create = () => {
           <input type="file" id="file" onChange={postImageUploader} />
 
           <button className="mt-8 bg-blue-600" type="submit">
-            Register
+            Create Post
           </button>
         </form>
       </div>

@@ -45,7 +45,6 @@ export const getPosts = async () => {
 }
 
 export const getPostsOfUser = async (username: string) => {
-  console.log('username', username)
   const query = gql`
     query getPosts($username: String!) {
       posts(where: { author: { username: $username } }) {
@@ -64,6 +63,5 @@ export const getPostsOfUser = async (username: string) => {
   `
 
   const result = await client.request(query, { username: username })
-
   return result
 }

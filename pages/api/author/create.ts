@@ -13,8 +13,18 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
 
   try {
     const mutation = gql`
-      mutation CreateAuthor($username: String!, $password: String!) {
-        createAuthor(data: { username: $username, password: $password }) {
+      mutation CreateAuthor(
+        $username: String!
+        $password: String!
+        $imageUrl: String!
+      ) {
+        createAuthor(
+          data: {
+            username: $username
+            password: $password
+            imageUrl: $imageUrl
+          }
+        ) {
           id
           username
           imageUrl
