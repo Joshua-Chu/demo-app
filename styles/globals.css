@@ -26,7 +26,12 @@
   }
 }
 
-/* @layer components {
-  .btn-blue {
+@layer components {
+  .link-btn {
+    @apply border-b-2 border-transparent pb-2 text-gray-400;
   }
-} */
+
+  .link-btn:hover {
+    @apply border-blue-600 text-blue-600;
+  }
+}
