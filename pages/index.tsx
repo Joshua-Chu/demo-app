@@ -1,11 +1,9 @@
-import { GetStaticProps } from 'next'
-import React, { useState } from 'react'
+import { GetServerSideProps, GetStaticProps } from 'next'
 import { getAuthors, getPosts } from '../lib/graphcms'
 
-import { serialize } from 'next-mdx-remote/serialize'
-import { MDXRemote } from 'next-mdx-remote'
-import Image from 'next/image'
 import { Posts } from '../components/Posts'
+import { Search } from '../components/Search'
+import { useAuth } from '../lib/auth/AuthProvider'
 
 const data = {
   posts: [
@@ -71,19 +69,23 @@ const data = {
 }
 
 const Home = () => {
+  const { user, login, logout } = useAuth()
   //   console.log('authors', authors.authors)
   //   console.log('authors', authors)
-
+  console.log(user)
   return (
     <main className="bg-neutral-900">
-      <Posts posts={data} />
+      <div className="container mx-auto flex flex-col pt-[88px]">
+        <Search />
+        <Posts posts={data} />
+      </div>
     </main>
   )
 }
 
-// export const getStaticProps: GetStaticProps = async () => {
+// export const getServerSideProps: GetServerSideProps = async () => {
 //   //   const authors = await getAuthors()
-//   //   const posts = await getPosts()
+//   const posts = await getPosts()
 //   //   const newPosts = await Promise.all(
 //   //     posts.posts.map(async (post) => {
 //   //       return {
@@ -96,10 +98,8 @@ const Home = () => {
 //   //   console.log(newPosts)
 //   return {
 //     props: {
-//       authors: 'authors',
-//       posts: '',
+//       posts,
 //     },
-//     revalidate: 3,
 //   }
 // }
 

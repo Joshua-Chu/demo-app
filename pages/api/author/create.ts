@@ -29,7 +29,6 @@ export default async function createAuthor(
           }
         ) {
           id
-          password
           username
           imageUrl
         }
@@ -46,7 +45,7 @@ export default async function createAuthor(
     `
 
     await client.request(publishMutation, { id: data.createAuthor.id })
-    return res.status(200).json({ success: true })
+    return res.status(200).json({ user: data })
   } catch (error: any) {
     return res
       .status(error.response.status)

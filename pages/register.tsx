@@ -1,27 +1,33 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { useAuth } from '../lib/auth/AuthProvider'
 
 const Register = () => {
+  const { setRegUser } = useAuth()
   const router = useRouter()
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [imageSrc, setImageSrc] = useState('')
+  const [imageSrc, setImageSrc] = useState<string | ArrayBuffer | null>('')
 
   const imageUploadHandler = (e: React.SyntheticEvent) => {
     e.preventDefault()
+
+    const target = e.target as HTMLInputElement
     const reader = new FileReader()
+
     reader.onload = function (onLoadEvent) {
-      setImageSrc(onLoadEvent.target.result)
+      setImageSrc(onLoadEvent.target && onLoadEvent.target.result)
     }
-    reader.readAsDataURL(e.target.files[0])
+
+    reader.readAsDataURL((target.files && target.files[0]) as Blob)
   }
 
   const onSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
 
-    const form = e.currentTarget
+    const form = e.currentTarget as any
     const fileInput = form.elements.file
     const formData = new FormData()
 
@@ -31,6 +37,7 @@ const Register = () => {
 
     formData.append('upload_preset', 'demo-uploads')
 
+    // Store images to Cloudinary
     const data = await fetch(
       'https://api.cloudinary.com/v1_1/dlfecpmkj/image/upload',
       {
@@ -39,6 +46,7 @@ const Register = () => {
       }
     ).then((r) => r.json())
 
+    // Register Author in CMS
     const res = await fetch('/api/author/create', {
       method: 'POST',
       body: JSON.stringify({
@@ -49,20 +57,18 @@ const Register = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-    })
+    }).then((r) => r.json())
 
-    if (res.status === 200) {
-      setUsername('')
-      setPassword('')
-      setImageSrc('')
+    setUsername('')
+    setPassword('')
+    setImageSrc('')
 
-      router.push('/')
-      //   TODO: store user in user context
-    }
+    setRegUser(res.user.createAuthor)
+    router.push('/')
   }
 
   return (
-    <div className="mt-12  py-8">
+    <div className="mt-[88px] py-8">
       <div className="container mx-auto  md:mx-auto md:max-w-lg">
         <h1 className="my-4 text-center text-blue-600">Register</h1>
 
@@ -81,17 +87,10 @@ const Register = () => {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            py-4
-            px-8
           />
-          <img src={imageSrc} />
+          <img src={imageSrc as string} />
           <label htmlFor="file">File</label>
-          <input
-            type="file"
-            id="file"
-            //   value={imageSrc}
-            onChange={imageUploadHandler}
-          />
+          <input type="file" id="file" onChange={imageUploadHandler} />
 
           <button className="mt-8 bg-blue-600" type="submit">
             Register

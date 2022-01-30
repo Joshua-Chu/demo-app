@@ -3,26 +3,26 @@ import { useState } from 'react'
 const Create = () => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [postImage, setPostImage] = useState('')
+  const [postImage, setPostImage] = useState<string | ArrayBuffer | null>('')
 
   const postImageUploader = (e: React.SyntheticEvent) => {
     e.preventDefault()
+    const target = e.target as HTMLInputElement
     const reader = new FileReader()
 
     reader.onload = function (onLoadEvent) {
-      setPostImage(onLoadEvent.target.result)
+      setPostImage(onLoadEvent.target && onLoadEvent.target.result)
     }
 
-    reader.readAsDataURL(e.target.files[0])
+    reader.readAsDataURL((target.files && target.files[0]) as Blob)
   }
 
   const onPostSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
-
-    const form = e.currentTarget
+    const form = e.currentTarget as any
     const fileInput = form.elements.file
-
     const formData = new FormData()
+
     for (const file of fileInput.files) {
       formData.append('file', file)
     }
@@ -57,7 +57,7 @@ const Create = () => {
     setPostImage('')
   }
   return (
-    <div className="mt-2  py-8">
+    <div className="mt-[88px]  py-8">
       <div className="container mx-auto  md:mx-auto md:max-w-lg">
         <h1 className="my-4 text-center text-blue-600">Create Post</h1>
 
@@ -83,7 +83,7 @@ const Create = () => {
             onChange={(e) => setDescription(e.target.value)}
           />
 
-          <img src={postImage} />
+          <img src={postImage as string} />
           <label htmlFor="file">File</label>
           <input type="file" id="file" onChange={postImageUploader} />
 

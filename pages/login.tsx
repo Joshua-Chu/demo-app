@@ -1,10 +1,13 @@
 import Link from 'next/link'
+import { useState } from 'react'
 
 const Login = () => {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   return (
-    <div className="mt-12  py-8">
+    <div className="mt-[88px]  py-8">
       <div className="container mx-auto  md:mx-auto md:max-w-lg">
-        <h1 className="my-4 text-center text-blue-600">Register</h1>
+        <h1 className="my-4 text-center text-blue-600">Login</h1>
 
         <form className="flex flex-col  gap-2  p-2 md:p-8">
           <label htmlFor="username">Username</label>
