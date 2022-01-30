@@ -1,82 +1,239 @@
-import Head from 'next/head'
+import { GetStaticProps } from 'next'
+import React, { useState } from 'react'
+import { getAuthors, getPosts } from '../lib/graphcms'
 
-export default function Home() {
+import { serialize } from 'next-mdx-remote/serialize'
+import { MDXRemote } from 'next-mdx-remote'
+
+const Home = () => {
+  //   console.log('authors', authors.authors)
+  //   console.log('authors', authors)
+
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [imageSrc, setImageSrc] = useState('')
+
+  const imageUploadHandler = (e: React.SyntheticEvent) => {
+    e.preventDefault()
+    const reader = new FileReader()
+
+    reader.onload = function (onLoadEvent) {
+      setImageSrc(onLoadEvent.target.result)
+    }
+
+    reader.readAsDataURL(e.target.files[0])
+  }
+
+  const onSubmit = async (e: React.SyntheticEvent) => {
+    e.preventDefault()
+
+    const form = e.currentTarget
+    const fileInput = form.elements.file
+
+    const formData = new FormData()
+    for (const file of fileInput.files) {
+      formData.append('file', file)
+    }
+
+    formData.append('upload_preset', 'demo-uploads')
+
+    const data = await fetch(
+      'https://api.cloudinary.com/v1_1/dlfecpmkj/image/upload',
+      {
+        method: 'POST',
+        body: formData,
+      }
+    ).then((r) => r.json())
+
+    const res = await fetch('/api/author/create', {
+      method: 'POST',
+      body: JSON.stringify({ username, password, imageUrl: data.secure_url }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    // console.log(await res.json())
+    setUsername('')
+    setPassword('')
+    setImageSrc('')
+  }
+
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
+  const [postImage, setPostImage] = useState('')
+
+  const postImageUploader = (e: React.SyntheticEvent) => {
+    e.preventDefault()
+    const reader = new FileReader()
+
+    reader.onload = function (onLoadEvent) {
+      setPostImage(onLoadEvent.target.result)
+    }
+
+    reader.readAsDataURL(e.target.files[0])
+  }
+
+  const onPostSubmit = async (e: React.SyntheticEvent) => {
+    e.preventDefault()
+
+    const form = e.currentTarget
+    const fileInput = form.elements.file
+
+    const formData = new FormData()
+    for (const file of fileInput.files) {
+      formData.append('file', file)
+    }
+
+    formData.append('upload_preset', 'demo-uploads')
+    const data = await fetch(
+      'https://api.cloudinary.com/v1_1/dlfecpmkj/image/upload',
+      {
+        method: 'POST',
+        body: formData,
+      }
+    ).then((r) => r.json())
+
+    const res = await fetch('/api/posts/create', {
+      method: 'POST',
+      body: JSON.stringify({
+        title,
+        description,
+        imageUrl: data.secure_url,
+        username: 'j',
+        slug: title.toLowerCase().replaceAll(' ', '-'),
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    console.log(res)
+
+    // setTitle('')
+    // setDescription('')
+    // setPostImage('')
+  }
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <>
+      <div>
+        {/* <h1 className="text-lg font-bold text-red-500">Author</h1>
 
-      <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
-        </h1>
+        <form className="flex w-2/5 flex-col gap-8" onSubmit={onSubmit}>
+          <label htmlFor="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            className="border border-red-500"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
 
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="rounded-md bg-gray-100 p-3 font-mono text-lg">
-            pages/index.tsx
-          </code>
-        </p>
+          <label htmlFor="password">Password</label>
+          <input
+            type="text"
+            id="password"
+            className="border border-red-500"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <img src={imageSrc} />
+          <label htmlFor="file">File</label>
+          <input
+            type="file"
+            id="file"
+            className="border border-red-500"
+            //   value={imageSrc}
+            onChange={imageUploadHandler}
+          />
 
-        <div className="mt-6 flex max-w-4xl flex-wrap items-center justify-around sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
+          <button
+            className="rounded-3xl bg-red-500 py-4 px-8 text-white"
+            type="submit"
           >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and API.
-            </p>
-          </a>
+            Register
+          </button>
+        </form> */}
 
-          <a
-            href="https://nextjs.org/learn"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
+        {/* <div>
+        <h2>Posts:</h2>
+        <ul>
+          {posts.map((post) => {
+            return (
+              <li key={post.id}>
+                <p>Title: {post.title}</p>
+                <MDXRemote {...post.source} />
+                <pre>{JSON.stringify(post.source, null, 2)}</pre>
+                <img src={post.imageUrl} alt="" />
+              </li>
+            )
+          })}
+        </ul>
+      </div> */}
+      </div>
 
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
+      <form className="flex w-2/5 flex-col gap-8" onSubmit={onPostSubmit}>
+        <label htmlFor="title">Title</label>
+        <input
+          type="text"
+          id="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="border border-red-500"
+        />
 
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
+        <label htmlFor="description">Description</label>
+        <textarea
+          name=""
+          id=""
+          cols={30}
+          rows={10}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="border border-red-500"
+        />
 
-      <footer className="flex h-24 w-full items-center justify-center border-t">
-        <a
-          className="flex items-center justify-center"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        <img src={postImage} />
+        <label htmlFor="file">File</label>
+        <input
+          type="file"
+          id="file"
+          className="border border-red-500"
+          onChange={postImageUploader}
+        />
+
+        <button
+          className="rounded-3xl bg-red-500 py-4 px-8 text-white"
+          type="submit"
         >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="ml-2 h-4" />
-        </a>
-      </footer>
-    </div>
+          Register
+        </button>
+      </form>
+    </>
   )
 }
+
+// export const getStaticProps: GetStaticProps = async () => {
+//   //   const authors = await getAuthors()
+//   //   const posts = await getPosts()
+//   //   const newPosts = await Promise.all(
+//   //     posts.posts.map(async (post) => {
+//   //       return {
+//   //         ...post,
+//   //         source: await serialize(post.description.markdown),
+//   //       }
+//   //     })
+//   //   )
+
+//   //   console.log(newPosts)
+//   return {
+//     props: {
+//       authors: 'authors',
+//       posts: '',
+//     },
+//     revalidate: 3,
+//   }
+// }
+
+export default Home
