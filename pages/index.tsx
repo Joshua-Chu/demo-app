@@ -4,6 +4,7 @@ import { getPosts } from '../lib/graphcms'
 import { Posts } from '../components/Posts'
 import { Search } from '../components/Search'
 import { Post } from '../types'
+import { useCallback, useState } from 'react'
 
 type HomeProps = {
   data: {
@@ -12,11 +13,29 @@ type HomeProps = {
 }
 
 const Home = ({ data }: HomeProps) => {
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const filteredPosts = useCallback(
+    (searchTerm) => {
+      if (searchTerm === '') return data
+
+      const newData = data.posts.filter((post) => {
+        return (
+          post.title.includes(searchTerm) ||
+          post.description.includes(searchTerm)
+        )
+      })
+
+      return { posts: newData }
+    },
+    [searchTerm]
+  )
+
   return (
-    <main className="bg-neutral-900">
+    <main className="min-h-screen bg-neutral-900">
       <div className="container mx-auto flex flex-col pt-[88px]">
-        <Search />
-        <Posts posts={data} />
+        <Search searchTerm={searchTerm} onChangeSearchTerm={setSearchTerm} />
+        <Posts posts={filteredPosts(searchTerm)} />
       </div>
     </main>
   )

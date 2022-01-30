@@ -7,7 +7,7 @@ const ErrorPage: NextPage = () => {
   return (
     <div className="h-screen bg-neutral-900 pt-[88px]">
       <Head>
-        <title> Goodfrontend | Page not found </title>
+        <title> Navigation North | Page not found </title>
       </Head>
 
       <div className="flex h-full flex-col items-center ">
