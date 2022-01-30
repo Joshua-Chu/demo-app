@@ -7,11 +7,13 @@
     @apply text-5xl font-bold;
   }
 
-  input:not([type='file']) {
+  input:not([type='file']),
+  textarea {
     @apply rounded-lg border-2 border-gray-400 p-2 outline-none;
   }
 
-  input:focus {
+  input:focus,
+  textarea:focus {
     @apply border-blue-400;
   }
 
