@@ -49,20 +49,24 @@ const PostDetail = ({ data }: PostDetailProps) => {
           </div>
         </div>
         <div className="flex  basis-3/6 flex-col overflow-y-scroll bg-neutral-900 px-4 py-8 text-gray-400 sm:px-8 md:basis-2/5 md:px-12">
-          <div className="mb-6 flex max-w-fit cursor-pointer items-center ">
-            {post.author.imageUrl && (
-              <div className="relative h-14 w-14">
-                <Image
-                  src={post.author.imageUrl}
-                  layout="fill"
-                  className="rounded-full"
-                />
-              </div>
-            )}
-            <div className="flex flex-col  pl-4 text-left">
-              <h2 className="text-blue-600">@{post.author.username}</h2>
-              <p>{timeCreated}</p>
-            </div>
+          <div className="mb-6">
+            <Link href={`/profile/${post.author.username}`}>
+              <a className="flex max-w-fit cursor-pointer items-center">
+                {post.author.imageUrl && (
+                  <div className="relative h-14 w-14">
+                    <Image
+                      src={post.author.imageUrl}
+                      layout="fill"
+                      className="rounded-full"
+                    />
+                  </div>
+                )}
+                <div className="flex flex-col  pl-4 text-left">
+                  <h2 className="text-blue-600">@{post.author.username}</h2>
+                  <p>{timeCreated}</p>
+                </div>
+              </a>
+            </Link>
           </div>
           <h1 className="mb-8 border-b-2 border-blue-600 pb-4 text-white">
             {post.title}
