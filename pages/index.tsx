@@ -1,10 +1,10 @@
-import { GetStaticPaths, GetStaticProps } from 'next'
+import { GetStaticProps } from 'next'
 import { getPosts } from '../lib/graphcms'
-
 import { Posts } from '../components/Posts'
 import { Search } from '../components/Search'
 import { Post } from '../types'
 import { useCallback, useState } from 'react'
+import Head from 'next/head'
 
 type HomeProps = {
   data: {
@@ -32,12 +32,17 @@ const Home = ({ data }: HomeProps) => {
   )
 
   return (
-    <main className="min-h-screen bg-neutral-900">
-      <div className="container mx-auto flex flex-col pt-[88px]">
-        <Search searchTerm={searchTerm} onChangeSearchTerm={setSearchTerm} />
-        <Posts posts={filteredPosts(searchTerm)} />
-      </div>
-    </main>
+    <>
+      <Head>
+        <title>Demo App - Home</title>
+      </Head>
+      <main className="min-h-screen bg-neutral-900">
+        <div className="container mx-auto flex flex-col pt-[88px]">
+          <Search searchTerm={searchTerm} onChangeSearchTerm={setSearchTerm} />
+          <Posts posts={filteredPosts(searchTerm)} />
+        </div>
+      </main>
+    </>
   )
 }
 

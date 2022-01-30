@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useAuth } from '../lib/auth/AuthProvider'
@@ -61,42 +62,47 @@ const Create = () => {
     router.push(`/profile/${user.username}`)
   }
   return (
-    <div className="mt-[88px] py-8">
-      <div className="container mx-auto  md:mx-auto md:max-w-lg">
-        <h1 className="my-4 text-center text-blue-600">Create Post</h1>
+    <>
+      <Head>
+        <title>Demo App - Create Post</title>
+      </Head>
+      <div className="mt-[88px] py-8">
+        <div className="container mx-auto  md:mx-auto md:max-w-lg">
+          <h1 className="my-4 text-center text-blue-600">Create Post</h1>
 
-        <form
-          className="flex flex-col  gap-2  p-2 md:p-8"
-          onSubmit={onPostSubmit}
-        >
-          <label htmlFor="title">Title</label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+          <form
+            className="flex flex-col  gap-2  p-2 md:p-8"
+            onSubmit={onPostSubmit}
+          >
+            <label htmlFor="title">Title</label>
+            <input
+              type="text"
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
 
-          <label htmlFor="description">Description</label>
-          <textarea
-            name=""
-            id=""
-            cols={30}
-            rows={10}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
+            <label htmlFor="description">Description</label>
+            <textarea
+              name=""
+              id=""
+              cols={30}
+              rows={10}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
 
-          <img src={postImage as string} />
-          <label htmlFor="file">File</label>
-          <input type="file" id="file" onChange={postImageUploader} />
+            <img src={postImage as string} />
+            <label htmlFor="file">File</label>
+            <input type="file" id="file" onChange={postImageUploader} />
 
-          <button className="mt-8 bg-blue-600" type="submit">
-            Create Post
-          </button>
-        </form>
+            <button className="mt-8 bg-blue-600" type="submit">
+              Create Post
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

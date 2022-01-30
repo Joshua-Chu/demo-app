@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
@@ -68,42 +69,50 @@ const Register = () => {
   }
 
   return (
-    <div className="mt-[88px] py-8">
-      <div className="container mx-auto  md:mx-auto md:max-w-lg">
-        <h1 className="my-4 text-center text-blue-600">Register</h1>
+    <>
+      <Head>
+        <title>Demo App - Registration</title>
+      </Head>
+      <div className="mt-[88px] py-8">
+        <div className="container mx-auto  md:mx-auto md:max-w-lg">
+          <h1 className="my-4 text-center text-blue-600">Register</h1>
 
-        <form className="flex flex-col  gap-2  p-2 md:p-8" onSubmit={onSubmit}>
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+          <form
+            className="flex flex-col  gap-2  p-2 md:p-8"
+            onSubmit={onSubmit}
+          >
+            <label htmlFor="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
 
-          <label htmlFor="password">Password</label>
-          <input
-            type="text"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <img src={imageSrc as string} />
-          <label htmlFor="file">File</label>
-          <input type="file" id="file" onChange={imageUploadHandler} />
+            <label htmlFor="password">Password</label>
+            <input
+              type="text"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <img src={imageSrc as string} />
+            <label htmlFor="file">File</label>
+            <input type="file" id="file" onChange={imageUploadHandler} />
 
-          <button className="mt-8 bg-blue-600" type="submit">
-            Register
-          </button>
-        </form>
-        <p className="text-center text-lg text-gray-700">
-          Already have an account?{' '}
-          <Link href={'/login'}>
-            <a className="text-blue-600">Login here!</a>
-          </Link>
-        </p>
+            <button className="mt-8 bg-blue-600" type="submit">
+              Register
+            </button>
+          </form>
+          <p className="text-center text-lg text-gray-700">
+            Already have an account?{' '}
+            <Link href={'/login'}>
+              <a className="text-blue-600">Login here!</a>
+            </Link>
+          </p>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
