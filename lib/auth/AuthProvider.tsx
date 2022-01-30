@@ -1,10 +1,5 @@
 import React, { createContext, useContext, useState } from 'react'
-
-export type User = {
-  id: ''
-  username: ''
-  imageUrl: ''
-}
+import { User } from '../../types'
 
 export type authContextType = {
   user: User

@@ -1,9 +1,9 @@
-import { GetServerSideProps } from 'next'
+import { GetServerSideProps, GetStaticPaths, GetStaticProps } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useMemo } from 'react'
 import * as timeago from 'timeago.js'
-import { getPostBySlug } from '../../lib/graphcms'
+import { getPostBySlug, getPosts } from '../../lib/graphcms'
 import { Post } from '../../types'
 
 const postData = {
@@ -35,9 +35,11 @@ type PostDetailProps = {
 
 const PostDetail = ({ data }: PostDetailProps) => {
   const { post } = data
+
   const timeCreated = useMemo(() => {
     return timeago.format(post.createdAt)
   }, [post.createdAt])
+
   return (
     <main className="h-screen pt-[88px]">
       <div className="flex h-full flex-col md:flex-row">
@@ -77,9 +79,22 @@ const PostDetail = ({ data }: PostDetailProps) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const slug = params && params.slug
-  const data = await getPostBySlug(slug as string)
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getPosts()
+  const paths = posts.posts.map((post) => {
+    return {
+      params: { slug: post.slug },
+    }
+  })
+  return {
+    paths,
+    fallback: 'blocking',
+  }
+}
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const { slug } = params as { slug: string }
+  const data = await getPostBySlug(slug)
 
   return {
     props: {

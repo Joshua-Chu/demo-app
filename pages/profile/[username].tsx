@@ -1,12 +1,13 @@
 import { GetServerSideProps } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect } from 'react'
-import { Card } from '../../components/Card'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import useSWR from 'swr'
 import { Posts } from '../../components/Posts'
 import { useAuth } from '../../lib/auth/AuthProvider'
-import { getPostsOfUser } from '../../lib/graphcms'
-import { Post } from '../../types'
+import { getAuthor, getPostsOfUser } from '../../lib/graphcms'
+import { Post, User } from '../../types'
 
 // const data = {
 //   posts: [
@@ -85,25 +86,60 @@ type ProfilePageProps = {
 }
 
 const ProfilePage = ({ data }: ProfilePageProps) => {
+  const router = useRouter()
   const { user } = useAuth()
+  const [userData, setUserData] = useState<User>({
+    id: '',
+    username: '',
+    imageUrl: '',
+  })
+
+  useEffect(() => {
+    const fetchAuthor = async () => {
+      return await getAuthor(router.query.username as string)
+    }
+    if (user.username === '' && user.username !== router.query.username) {
+      fetchAuthor().then((data) => setUserData(data.author))
+    }
+  }, [user])
 
   return (
     <main className="min-h-screen bg-neutral-900 pb-40">
       <div className="container mx-auto flex flex-col pt-[88px] ">
-        <div className="mx-auto mt-12 mb-16 sm:mt-20">
-          <div className="relative h-40 w-40 rounded-full">
-            {user.imageUrl && (
-              <Image
-                src={user.imageUrl}
-                layout="fill"
-                className="rounded-full"
-              />
-            )}
+        {user.username === '' && user.username !== router.query.username && (
+          <div className="mx-auto mt-12 mb-16 sm:mt-20">
+            <div className="relative h-40 w-40 rounded-full">
+              {userData.imageUrl && (
+                <Image
+                  src={userData.imageUrl}
+                  layout="fill"
+                  className="rounded-full"
+                />
+              )}
+            </div>
+            <h2 className="mt-4 text-center text-2xl font-bold text-blue-600">
+              @{userData.username}
+            </h2>
           </div>
-          <h2 className="mt-4 text-center text-2xl font-bold text-blue-600">
-            @{user.username}
-          </h2>
-        </div>
+        )}
+
+        {user.username !== '' && user.username === router.query.username && (
+          <div className="mx-auto mt-12 mb-16 sm:mt-20">
+            <div className="relative h-40 w-40 rounded-full">
+              {user.imageUrl && (
+                <Image
+                  src={user.imageUrl}
+                  layout="fill"
+                  className="rounded-full"
+                />
+              )}
+            </div>
+            <h2 className="mt-4 text-center text-2xl font-bold text-blue-600">
+              @{user.username}
+            </h2>
+          </div>
+        )}
+
         <div>
           {data.posts.length !== 0 ? (
             <Posts posts={data} />
@@ -122,8 +158,8 @@ const ProfilePage = ({ data }: ProfilePageProps) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const username = params && params.username
-  const data = await getPostsOfUser(username as string)
+  const { username } = params as { username: string }
+  const data = await getPostsOfUser(username)
   return {
     props: {
       data,

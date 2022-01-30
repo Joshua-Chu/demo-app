@@ -11,3 +11,9 @@ export interface Post {
   title: string
   createdAt: string
 }
+
+export type User = {
+  id: ''
+  username: ''
+  imageUrl: ''
+}

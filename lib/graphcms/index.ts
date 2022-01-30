@@ -1,6 +1,6 @@
 import { gql } from 'graphql-request'
 import { GraphQLClient } from 'graphql-request'
-import { Post } from '../../types'
+import { Post, User } from '../../types'
 
 const urlEndpoint = process.env.NEXT_PUBLIC_GRAPHCMS_ENDPOINT as string
 export const client = new GraphQLClient(urlEndpoint)
@@ -18,6 +18,20 @@ export const getAuthors = async () => {
   `
 
   const result = await client.request(query)
+  return result
+}
+
+export const getAuthor = async (username: string) => {
+  const query = gql`
+    query MyQuery($username: String!) {
+      author(where: { username: $username }) {
+        id
+        imageUrl
+        username
+      }
+    }
+  `
+  const result: { author: User } = await client.request(query, { username })
   return result
 }
 
@@ -41,7 +55,7 @@ export const getPosts = async () => {
     }
   `
 
-  const result = await client.request(query)
+  const result: { posts: Post[] } = await client.request(query)
   return result
 }
 
