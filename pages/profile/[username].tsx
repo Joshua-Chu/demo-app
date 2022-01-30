@@ -78,7 +78,7 @@ const ProfilePage = () => {
   console.log(authorData)
   return (
     <main className="bg-gray-100">
-      <div className="container mx-auto flex flex-col  px-4">
+      <div className="container mx-auto flex flex-col px-4">
         <div className="mx-auto mt-12 mb-16 sm:mt-20">
           <div className="relative h-40 w-40 rounded-full">
             <Image
