@@ -32,22 +32,23 @@ export default async function createPost(
             slug: $slug
           }
         ) {
+          id
           slug
         }
       }
     `
     const data = await client.request(mutation, params)
-    //   console.log('data', data)
+    console.log('data', data)
 
-    // const publishMutation = gql`
-    //   mutation PublishAuthor($id: ID!) {
-    //     publishAuthor(where: { id: $id }, to: PUBLISHED) {
-    //       id
-    //     }
-    //   }
-    // `
+    const publishPost = gql`
+      mutation PublishPost($id: ID!) {
+        publishPost(where: { id: $id }, to: PUBLISHED) {
+          id
+        }
+      }
+    `
 
-    // await client.request(publishMutation, { id: data.createAuthor.id })
+    await client.request(publishPost, { id: data.createPost.id })
     return res.status(200).json({ success: true })
   } catch (error: any) {
     return res

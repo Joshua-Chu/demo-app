@@ -9,56 +9,6 @@ const Home = () => {
   //   console.log('authors', authors.authors)
   //   console.log('authors', authors)
 
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [imageSrc, setImageSrc] = useState('')
-
-  const imageUploadHandler = (e: React.SyntheticEvent) => {
-    e.preventDefault()
-    const reader = new FileReader()
-
-    reader.onload = function (onLoadEvent) {
-      setImageSrc(onLoadEvent.target.result)
-    }
-
-    reader.readAsDataURL(e.target.files[0])
-  }
-
-  const onSubmit = async (e: React.SyntheticEvent) => {
-    e.preventDefault()
-
-    const form = e.currentTarget
-    const fileInput = form.elements.file
-
-    const formData = new FormData()
-    for (const file of fileInput.files) {
-      formData.append('file', file)
-    }
-
-    formData.append('upload_preset', 'demo-uploads')
-
-    const data = await fetch(
-      'https://api.cloudinary.com/v1_1/dlfecpmkj/image/upload',
-      {
-        method: 'POST',
-        body: formData,
-      }
-    ).then((r) => r.json())
-
-    const res = await fetch('/api/author/create', {
-      method: 'POST',
-      body: JSON.stringify({ username, password, imageUrl: data.secure_url }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-
-    // console.log(await res.json())
-    setUsername('')
-    setPassword('')
-    setImageSrc('')
-  }
-
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [postImage, setPostImage] = useState('')

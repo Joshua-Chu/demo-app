@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  h1 {
+    @apply text-5xl font-bold;
+  }
+
+  input:not([type='file']) {
+    @apply rounded-lg border-2 border-gray-400 p-2 outline-none;
+  }
+
+  input:focus {
+    @apply border-blue-400;
+  }
+
+  label {
+    @apply text-lg text-gray-700;
+  }
+
+  button {
+    @apply rounded-3xl  py-4 px-8 text-white;
+  }
+}
+
+/* @layer components {
+  .btn-blue {
+  }
+} */
