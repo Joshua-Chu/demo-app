@@ -43,3 +43,27 @@ export const getPosts = async () => {
   const result = await client.request(query)
   return result
 }
+
+export const getPostsOfUser = async (username: string) => {
+  console.log('username', username)
+  const query = gql`
+    query getPosts($username: String!) {
+      posts(where: { author: { username: $username } }) {
+        author {
+          imageUrl
+          username
+        }
+        description
+        id
+        imageUrl
+        slug
+        title
+        createdAt
+      }
+    }
+  `
+
+  const result = await client.request(query, { username: username })
+
+  return result
+}
