@@ -78,7 +78,7 @@ const ProfilePage = () => {
   console.log(authorData)
   return (
     <main className="bg-gray-100">
-      <div className="container mx-auto flex flex-col px-4">
+      <div className="container mx-auto flex flex-col pt-[88px] ">
         <div className="mx-auto mt-12 mb-16 sm:mt-20">
           <div className="relative h-40 w-40 rounded-full">
             <Image
@@ -95,7 +95,7 @@ const ProfilePage = () => {
           {data.posts.map((post) => (
             <div key={post.id} className="flex justify-center ">
               <div className="h-fit w-full max-w-[350px] border-2 border-gray-200 shadow-lg">
-                <div className="relative h-72 w-full ">
+                <div className="relative  h-72 w-full">
                   <Image
                     src={post.imageUrl}
                     layout="fill"
