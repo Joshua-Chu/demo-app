@@ -8,26 +8,13 @@ export const client = new GraphQLClient(urlEndpoint, {
   },
 })
 
-export default async function createAuthor(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function login(req: NextApiRequest, res: NextApiResponse) {
   const params = req.body
 
   try {
     const mutation = gql`
-      mutation CreateAuthor(
-        $username: String!
-        $password: String!
-        $imageUrl: String!
-      ) {
-        createAuthor(
-          data: {
-            username: $username
-            password: $password
-            imageUrl: $imageUrl
-          }
-        ) {
+      mutation CreateAuthor($username: String!, $password: String!) {
+        createAuthor(data: { username: $username, password: $password }) {
           id
           username
           imageUrl

@@ -1,20 +1,56 @@
 import Link from 'next/link'
-import { useState } from 'react'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
+import { useAuth } from '../lib/auth/AuthProvider'
 
 const Login = () => {
+  const router = useRouter()
+  const { setRegUser } = useAuth()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+
+  const onLogin = async (e: React.SyntheticEvent) => {
+    e.preventDefault()
+    console.log({ username, password })
+
+    const res = await fetch('/api/author/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((r) => r.json())
+
+    setRegUser(res.user)
+    setPassword('')
+    setUsername('')
+
+    router.push(`/profile/${res.user.username}`)
+  }
   return (
     <div className="mt-[88px]  py-8">
       <div className="container mx-auto  md:mx-auto md:max-w-lg">
         <h1 className="my-4 text-center text-blue-600">Login</h1>
 
-        <form className="flex flex-col  gap-2  p-2 md:p-8">
+        <form className="flex flex-col  gap-2  p-2 md:p-8" onSubmit={onLogin}>
           <label htmlFor="username">Username</label>
-          <input type="text" id="username" />
+          <input
+            type="text"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
 
           <label htmlFor="password">Password</label>
-          <input type="text" id="password" py-4 px-8 />
+          <input
+            type="text"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
           <button className="mt-8 bg-blue-600" type="submit">
             Login
