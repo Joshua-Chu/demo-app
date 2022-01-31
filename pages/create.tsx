@@ -48,7 +48,9 @@ const Create = () => {
         description,
         imageUrl: data.secure_url,
         username: user.username,
-        slug: `${user.username}-${title.toLowerCase().replaceAll(' ', '-')}`,
+        slug: `${user.username.toLowerCase()}-${title
+          .toLowerCase()
+          .replaceAll(' ', '-')}`,
       }),
       headers: {
         'Content-Type': 'application/json',
