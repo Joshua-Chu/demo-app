@@ -26,6 +26,7 @@ const ProfilePage = ({ data }: ProfilePageProps) => {
     const fetchAuthor = async () => {
       return await getAuthor(router.query.username as string)
     }
+
     if (user.username === '' && user.username !== router.query.username) {
       fetchAuthor().then((data) => setUserData(data.author))
     }

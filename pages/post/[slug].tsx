@@ -31,6 +31,7 @@ const PostDetail = ({ data }: PostDetailProps) => {
         />
         <meta name="twitter:image" content={post.imageUrl} key="twimage" />
       </Head>
+
       <main className="h-screen pt-[88px]">
         <div className="flex h-full flex-col md:flex-row">
           <div className="flex  basis-3/6 items-center justify-center bg-black px-4 md:basis-3/5">
